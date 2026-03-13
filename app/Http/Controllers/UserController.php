@@ -7,59 +7,65 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Lấy tất cả user
     public function index()
     {
-        //
+        return response()->json(User::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Lấy user theo id
+    public function show($id)
     {
-        //
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                "message" => "User not found"
+            ], 404);
+        }
+
+        return response()->json($user);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Tạo user
     public function store(Request $request)
     {
-        //
+        $user = User::create($request->all());
+
+        return response()->json($user, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
+    // Cập nhật user
+    public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                "message" => "User not found"
+            ], 404);
+        }
+
+        $user->update($request->all());
+
+        return response()->json($user);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
+    // Xóa user
+    public function destroy($id)
     {
-        //
-    }
+        $user = User::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
+        if (!$user) {
+            return response()->json([
+                "message" => "User not found"
+            ], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
+        $user->delete();
+
+        return response()->json([
+            "message" => "User deleted"
+        ]);
     }
 }
